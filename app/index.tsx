@@ -1,57 +1,96 @@
-import { Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { SegmentedButtons, useTheme } from 'react-native-paper';
 
-import { useAppStore } from '../src/store/useAppStore';
+import { DashboardLayout } from '@components/layout/DashboardLayout';
+import { useUiStore } from '@store/uiStore';
+
+type AnalyticsTab = 'kpi' | 'finance' | 'fuel';
 
 export default function HomeScreen() {
-  const { count, increment } = useAppStore();
+  const selectedDashboard = useUiStore((state) => state.selectedDashboard);
+  const theme = useTheme();
+  const [analyticsTab, setAnalyticsTab] = useState<AnalyticsTab>('kpi');
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Alarta Mobile</Text>
-      <Text style={styles.counter}>Count: {count}</Text>
-      <Pressable style={styles.button} onPress={increment}>
-        <Text style={styles.buttonText}>Increment</Text>
-      </Pressable>
+    <DashboardLayout>
+      {selectedDashboard === 'mechanicAssist' && (
+        <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+          <Text style={[styles.title, { color: theme.colors.onSurface }]}>Механик Ассист</Text>
+          <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
+            Здесь будет интерфейс помощника механика: заявки, ТО, напоминания и состояние техники.
+          </Text>
+        </View>
+      )}
 
-      <Link href="/settings" style={styles.link}>
-        Go to settings
-      </Link>
-    </View>
+      {selectedDashboard === 'analytics' && (
+        <View style={styles.analyticsContainer}>
+          <SegmentedButtons
+            value={analyticsTab}
+            onValueChange={(value) => setAnalyticsTab(value as AnalyticsTab)}
+            buttons={[
+              { value: 'kpi', label: 'КПД' },
+              { value: 'finance', label: 'Финансовая аналитика' },
+              { value: 'fuel', label: 'Топливная аналитика' },
+            ]}
+          />
+
+          <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
+            {analyticsTab === 'kpi' && (
+              <>
+                <Text style={[styles.title, { color: theme.colors.onSurface }]}>КПД</Text>
+                <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
+                  Здесь появятся ключевые метрики эффективности работы транспорта.
+                </Text>
+              </>
+            )}
+            {analyticsTab === 'finance' && (
+              <>
+                <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+                  Финансовая аналитика
+                </Text>
+                <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
+                  Здесь будет аналитика по затратам, выручке и себестоимости.
+                </Text>
+              </>
+            )}
+            {analyticsTab === 'fuel' && (
+              <>
+                <Text style={[styles.title, { color: theme.colors.onSurface }]}>
+                  Топливная аналитика
+                </Text>
+                <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
+                  Здесь будет анализ расхода топлива, заправок и отклонений от нормы.
+                </Text>
+              </>
+            )}
+          </View>
+        </View>
+      )}
+    </DashboardLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
+  analyticsContainer: {
+    gap: 12,
+  },
+  card: {
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 2,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  counter: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '700',
+    marginBottom: 8,
   },
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    backgroundColor: '#2563eb',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  link: {
-    marginTop: 24,
-    color: '#2563eb',
-    fontSize: 16,
+  text: {
+    fontSize: 14,
+    color: '#4b5563',
   },
 });
-

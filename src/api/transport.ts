@@ -10,4 +10,3 @@ export async function fetchTransportAnalytics(): Promise<TransportAnalytics[]> {
   const response = await apiClient.get<TransportAnalytics[]>('/transport/analytics');
   return response.data;
 }
-
