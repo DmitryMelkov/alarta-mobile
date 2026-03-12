@@ -15,8 +15,10 @@ const items: Item[] = [
 ];
 
 export function Sidebar() {
-  const { selectedDashboard, setSelectedDashboard, isSidebarCollapsed, toggleSidebar } =
-    useUiStore();
+  const selectedDashboard = useUiStore((state) => state.selectedDashboard);
+  const setSelectedDashboard = useUiStore((state) => state.setSelectedDashboard);
+  const isSidebarCollapsed = useUiStore((state) => state.isSidebarCollapsed);
+  const toggleSidebar = useUiStore((state) => state.toggleSidebar);
   const theme = useTheme();
 
   const containerWidth = isSidebarCollapsed ? 72 : 220;

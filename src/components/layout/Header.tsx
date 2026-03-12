@@ -1,10 +1,19 @@
-import { Image, StyleSheet, View } from 'react-native';
-import { IconButton, useTheme } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { IconButton, Menu, Text, useTheme } from 'react-native-paper';
+import React, { useState } from 'react';
 
 import { useUiStore } from '@store/uiStore';
+import { useAuthStore } from '@store/authStore';
 
 export function Header() {
-  const { isDarkTheme, toggleTheme } = useUiStore();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const isDarkTheme = useUiStore((state) => state.isDarkTheme);
+  const toggleTheme = useUiStore((state) => state.toggleTheme);
+  const setSidebarOpen = useUiStore((state) => state.setSidebarOpen);
+  const { user, logout } = useAuthStore((state) => ({
+    user: state.user,
+    logout: state.logout,
+  }));
   const theme = useTheme();
 
   return (
@@ -18,7 +27,12 @@ export function Header() {
       ]}
     >
       <View style={styles.left}>
-        <Image source={require('../../../assets/img/logoSmal.png')} style={styles.logoImage} />
+        <IconButton
+          icon="menu"
+          size={24}
+          onPress={() => setSidebarOpen(true)}
+          style={styles.menuButton}
+        />
       </View>
       <View style={styles.right}>
         <IconButton
@@ -26,7 +40,26 @@ export function Header() {
           size={22}
           onPress={toggleTheme}
         />
-        <IconButton icon="account-circle" size={24} onPress={() => {}} />
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          anchor={
+            <IconButton icon="account-circle" size={24} onPress={() => setMenuVisible(true)} />
+          }
+        >
+          {user?.name ? (
+            <View style={styles.menuHeader}>
+              <Text>{user.name}</Text>
+            </View>
+          ) : null}
+          <Menu.Item
+            onPress={async () => {
+              setMenuVisible(false);
+              await logout();
+            }}
+            title="Выйти"
+          />
+        </Menu>
       </View>
     </View>
   );
@@ -46,21 +79,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  logoImage: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: '700',
-    letterSpacing: 1.5,
-  },
   subtitle: {
     fontSize: 12,
   },
   right: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  menuHeader: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  menuButton: {
+    margin: 0,
   },
 });

@@ -4,7 +4,7 @@ import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { SidebarOverlay } from './SidebarOverlay';
 
 type Props = {
   children: ReactNode;
@@ -19,10 +19,8 @@ export function DashboardLayout({ children }: Props) {
       style={[styles.root, { paddingTop: insets.top, backgroundColor: theme.colors.background }]}
     >
       <Header />
-      <View style={styles.contentRow}>
-        <Sidebar />
-        <View style={styles.main}>{children}</View>
-      </View>
+      <View style={styles.main}>{children}</View>
+      <SidebarOverlay />
     </View>
   );
 }
@@ -31,10 +29,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#f3f4f6',
-  },
-  contentRow: {
-    flex: 1,
-    flexDirection: 'row',
   },
   main: {
     flex: 1,

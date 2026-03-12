@@ -9,6 +9,8 @@ type UiState = {
   toggleTheme: () => void;
   isSidebarCollapsed: boolean;
   toggleSidebar: () => void;
+  isSidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 };
 
 export const useUiStore = create<UiState>((set) => ({
@@ -18,4 +20,6 @@ export const useUiStore = create<UiState>((set) => ({
   toggleTheme: () => set((state) => ({ isDarkTheme: !state.isDarkTheme })),
   isSidebarCollapsed: true,
   toggleSidebar: () => set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+  isSidebarOpen: false,
+  setSidebarOpen: (open) => set({ isSidebarOpen: open }),
 }));
