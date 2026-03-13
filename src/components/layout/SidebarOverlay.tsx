@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -39,6 +40,7 @@ export function SidebarOverlay() {
   const panelWidth = Dimensions.get('window').width * SIDEBAR_WIDTH_RATIO;
   const panelSlide = useRef(new Animated.Value(-panelWidth)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const useNativeDriver = Platform.OS !== 'web';
 
   useEffect(() => {
     if (isOpen) {
@@ -50,16 +52,16 @@ export function SidebarOverlay() {
         Animated.timing(panelSlide, {
           toValue: 0,
           duration: 250,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
         Animated.timing(backdropOpacity, {
           toValue: 1,
           duration: 250,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
       ]).start();
     }
-  }, [isOpen, panelSlide, backdropOpacity]);
+  }, [isOpen, panelSlide, backdropOpacity, useNativeDriver]);
 
   const handleClose = () => {
     setClosing(true);
@@ -68,12 +70,12 @@ export function SidebarOverlay() {
       Animated.timing(panelSlide, {
         toValue: -w,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
       Animated.timing(backdropOpacity, {
         toValue: 0,
         duration: 250,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
     ]).start(() => {
       setSidebarOpen(false);
@@ -177,11 +179,15 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingTop: 8,
     paddingBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
+    ...(Platform.OS === 'web'
+      ? { boxShadow: '2px 0 8px 0 rgba(0,0,0,0.15)' }
+      : {
+          shadowColor: '#000',
+          shadowOffset: { width: 2, height: 0 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 8,
+        }),
   },
   header: {
     flexDirection: 'row',

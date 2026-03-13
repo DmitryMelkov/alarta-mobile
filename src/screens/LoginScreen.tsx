@@ -106,9 +106,12 @@ export function LoginScreen() {
 
       <Button
         mode="contained"
-        onPress={handleSubmit}
+        onPress={() => {
+          if (!loading) {
+            void handleSubmit();
+          }
+        }}
         loading={loading}
-        disabled={loading}
         buttonColor={primary}
         style={styles.button}
         labelStyle={[styles.buttonLabel, loading && styles.buttonLabelLoading]}
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
   titleUnderline: {
     width: 48,
     height: 3,
-    borderRadius: 999,
+    borderRadius: 10,
     alignSelf: 'center',
     marginBottom: 16,
   },
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
-    borderRadius: 999,
+    borderRadius: 10,
     paddingVertical: 4,
   },
   buttonLabel: {

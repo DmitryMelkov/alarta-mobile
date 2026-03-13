@@ -1,37 +1,33 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text, useTheme } from 'react-native-paper';
+import { ScrollView, StyleSheet } from 'react-native';
+import { useMechanicAssistData } from '../hooks/useMechanicAssistData';
+import { MalfunctionsCard } from '../components/MalfunctionsCard';
+import { StatusCard } from '../components/StatusCard';
+import { MaintenanceCard } from '../components/MaintenanceCard';
+import { ProblematicCarsCard } from '../components/ProblematicCarsCard';
+import { TopProblemsCard } from '../components/TopProblemsCard';
 
-export function MechanicAssistScreen() {
-  const theme = useTheme();
+export const MechanicAssistScreen = () => {
+  const { loading, error, malfunctions, status, maintenance, topProblems, problematicCars } =
+    useMechanicAssistData();
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-      <Text style={[styles.title, { color: theme.colors.onSurface }]}>Механик Ассист</Text>
-      <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
-        Здесь будет интерфейс помощника механика: заявки, ТО, напоминания и состояние техники.
-      </Text>
-    </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <MalfunctionsCard data={malfunctions} loading={loading} error={error} />
+      <StatusCard data={status} loading={loading} error={error} />
+      <MaintenanceCard data={maintenance} loading={loading} error={error} />
+      <ProblematicCarsCard cars={problematicCars} loading={loading} error={error} />
+      <TopProblemsCard problems={topProblems} loading={loading} error={error} />
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  card: {
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 2,
+  container: {
+    flex: 1,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  text: {
-    fontSize: 14,
-    color: '#4b5563',
+  content: {
+    paddingVertical: 16,
+    paddingBottom: 32,
   },
 });

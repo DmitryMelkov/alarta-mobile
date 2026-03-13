@@ -1,0 +1,140 @@
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Card, Text, ProgressBar, useTheme } from 'react-native-paper';
+import { COLORS } from '@src/theme/colors';
+import type { MaintenanceStats } from '../utils/maintenanceStats';
+
+// overdue -> progress-critical (красный), approaching -> progress-important (жёлтый),
+// planned -> progress-minor (зелёный), not-configured -> progress-no-data (серый)
+const ROWS: { key: keyof MaintenanceStats; label: string; color: string }[] = [
+  { key: 'overdue', label: 'Просрочено', color: COLORS.progressCritical },
+  { key: 'approaching', label: 'Приближается', color: COLORS.progressImportant },
+  { key: 'planned', label: 'Запланировано', color: COLORS.progressMinor },
+  { key: 'not-configured', label: 'Не настроено', color: COLORS.progressNoData },
+];
+
+interface MaintenanceCardProps {
+  data: MaintenanceStats | null;
+  loading?: boolean;
+  error?: string | null;
+}
+
+export const MaintenanceCard = ({ data, loading, error }: MaintenanceCardProps) => {
+  const theme = useTheme();
+
+  if (error) {
+    return (
+      <Card style={styles.card} mode="elevated">
+        <Card.Content>
+          <Text variant="titleMedium" style={{ color: theme.colors.error }}>
+            {error}
+          </Text>
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  return (
+    <Card style={styles.card} mode="elevated">
+      <Card.Title title="Техобслуживание" titleVariant="titleMedium" />
+      <Card.Content style={styles.content}>
+        {loading ? (
+          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+            Загрузка…
+          </Text>
+        ) : !data ? (
+          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+            Нет данных
+          </Text>
+        ) : (
+          <View style={styles.rows}>
+            {ROWS.map(({ key, label, color }) => {
+              const item = data[key];
+              const pct = item.percentage / 100;
+              return (
+                <View key={key} style={styles.row}>
+                  <View style={styles.labelContent}>
+                    <View style={[styles.dot, { backgroundColor: color }]} />
+                    <Text variant="bodyMedium" style={styles.label}>
+                      {label}
+                    </Text>
+                  </View>
+                  <View style={styles.right}>
+                    <View style={styles.progressTrack}>
+                      <ProgressBar progress={pct} color={color} style={styles.progress} />
+                    </View>
+                    <Text variant="bodyMedium" style={styles.count}>
+                      {item.count}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </Card.Content>
+    </Card>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+  },
+  content: {
+    paddingRight: 4,
+  },
+  rows: {
+    gap: 12,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  labelContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+    minWidth: 0,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  label: {
+    flex: 1,
+  },
+  right: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1,
+    minWidth: 0,
+    gap: 8,
+    marginLeft: 8,
+  },
+  progressTrack: {
+    flex: 1,
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(0,0,0,0.08)',
+  },
+  progress: {
+    height: 6,
+  },
+  count: {
+    minWidth: 28,
+    textAlign: 'center',
+    marginRight: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    backgroundColor: 'rgba(0,0,0,0.06)',
+  },
+});

@@ -11,4 +11,10 @@ export const COLORS = {
   inputBackground: '#f5f5f5',
   inputBackgroundFocused: '#ffffff',
   inputPlaceholder: '#999999',
+
+  // Статусы / прогресс-бары (из веб-дэшборда Mechanic Assist)
+  progressCritical: '#dc3545',
+  progressImportant: '#ffc107',
+  progressMinor: '#308e21',
+  progressNoData: '#6c757d',
 };
