@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IconButton, Text, useTheme } from 'react-native-paper';
 
-import { DashboardId, useUiStore } from '@store/uiStore';
+import { DashboardId, useUiStore } from '@shared/store/uiStore';
 
 type Item = {
   id: DashboardId;

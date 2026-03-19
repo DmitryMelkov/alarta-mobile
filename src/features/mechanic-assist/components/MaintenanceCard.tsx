@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Card, Text, ProgressBar, useTheme } from 'react-native-paper';
 import { COLORS } from '@src/theme/colors';
+import { CardTitle } from '@shared/components/ui/CardTitle';
+import { LoadingState } from '@shared/components/ui/LoadingState';
 import type { MaintenanceStats } from '../utils/maintenanceStats';
 
 // overdue -> progress-critical (красный), approaching -> progress-important (жёлтый),
@@ -17,9 +19,15 @@ interface MaintenanceCardProps {
   data: MaintenanceStats | null;
   loading?: boolean;
   error?: string | null;
+  onCategoryPress?: (key: keyof MaintenanceStats) => void;
 }
 
-export const MaintenanceCard = ({ data, loading, error }: MaintenanceCardProps) => {
+export const MaintenanceCard = ({
+  data,
+  loading,
+  error,
+  onCategoryPress,
+}: MaintenanceCardProps) => {
   const theme = useTheme();
 
   if (error) {
@@ -36,23 +44,26 @@ export const MaintenanceCard = ({ data, loading, error }: MaintenanceCardProps) 
 
   return (
     <Card style={styles.card} mode="elevated">
-      <Card.Title title="Техобслуживание" titleVariant="titleMedium" />
+      <CardTitle title="Техобслуживание" iconName="build" />
       <Card.Content style={styles.content}>
         {loading ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Загрузка…
-          </Text>
+          <LoadingState loading />
         ) : !data ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Нет данных
-          </Text>
+          <LoadingState empty />
         ) : (
           <View style={styles.rows}>
             {ROWS.map(({ key, label, color }) => {
               const item = data[key];
               const pct = item.percentage / 100;
+              const RowComponent = onCategoryPress ? TouchableOpacity : View;
+
               return (
-                <View key={key} style={styles.row}>
+                <RowComponent
+                  key={key}
+                  style={styles.row}
+                  onPress={onCategoryPress ? () => onCategoryPress(key) : undefined}
+                  activeOpacity={0.7}
+                >
                   <View style={styles.labelContent}>
                     <View style={[styles.dot, { backgroundColor: color }]} />
                     <Text variant="bodyMedium" style={styles.label}>
@@ -67,7 +78,7 @@ export const MaintenanceCard = ({ data, loading, error }: MaintenanceCardProps) 
                       {item.count}
                     </Text>
                   </View>
-                </View>
+                </RowComponent>
               );
             })}
           </View>
@@ -84,6 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   content: {
+    paddingTop: 0,
     paddingRight: 4,
   },
   rows: {

@@ -1,5 +1,5 @@
 import { jwtDecode } from 'jwt-decode';
-import type { JwtPayload } from '@src/types/auth';
+import type { JwtPayload } from '@shared/types/auth';
 
 export const isTokenExpired = (token: string, bufferMs: number = 0): boolean => {
   if (!token) return true;

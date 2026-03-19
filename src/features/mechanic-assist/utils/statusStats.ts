@@ -1,4 +1,4 @@
-import type { DTCCar, DTCVehicleWithActive } from '@src/types/dtc';
+import type { DTCCar, DTCVehicleWithActive } from '@shared/types/dtc';
 
 export interface StatusStats {
   active: { count: number; percentage: number };

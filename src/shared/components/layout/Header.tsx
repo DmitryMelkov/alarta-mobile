@@ -2,8 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import { IconButton, Menu, Text, useTheme } from 'react-native-paper';
 import React, { useState } from 'react';
 
-import { useUiStore } from '@store/uiStore';
-import { useAuthStore } from '@store/authStore';
+import { useUiStore } from '@shared/store/uiStore';
+import { useAuthStore } from '@shared/store/authStore';
 
 export function Header() {
   const [menuVisible, setMenuVisible] = useState(false);

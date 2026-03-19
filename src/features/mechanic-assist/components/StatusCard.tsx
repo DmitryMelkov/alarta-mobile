@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Card, Text, ProgressBar, useTheme } from 'react-native-paper';
 import { COLORS } from '@src/theme/colors';
+import { CardTitle } from '@shared/components/ui/CardTitle';
+import { LoadingState } from '@shared/components/ui/LoadingState';
 import type { StatusStats } from '../utils/statusStats';
 
 // active -> progress-minor (зелёный), in-work -> progress-important (жёлтый),
@@ -17,9 +19,10 @@ interface StatusCardProps {
   data: StatusStats | null;
   loading?: boolean;
   error?: string | null;
+  onStatusPress?: (key: keyof StatusStats) => void;
 }
 
-export const StatusCard = ({ data, loading, error }: StatusCardProps) => {
+export const StatusCard = ({ data, loading, error, onStatusPress }: StatusCardProps) => {
   const theme = useTheme();
 
   if (error) {
@@ -36,23 +39,26 @@ export const StatusCard = ({ data, loading, error }: StatusCardProps) => {
 
   return (
     <Card style={styles.card} mode="elevated">
-      <Card.Title title="Статус машин" titleVariant="titleMedium" />
+      <CardTitle title="Статус машин" iconName="speed" />
       <Card.Content style={styles.content}>
         {loading ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Загрузка…
-          </Text>
+          <LoadingState loading />
         ) : !data ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Нет данных
-          </Text>
+          <LoadingState empty />
         ) : (
           <View style={styles.rows}>
             {ROWS.map(({ key, label, color }) => {
               const item = data[key];
               const pct = item.percentage / 100;
+              const RowComponent = onStatusPress ? TouchableOpacity : View;
+
               return (
-                <View key={key} style={styles.row}>
+                <RowComponent
+                  key={key}
+                  style={styles.row}
+                  onPress={onStatusPress ? () => onStatusPress(key) : undefined}
+                  activeOpacity={0.7}
+                >
                   <View style={styles.labelContent}>
                     <View style={[styles.dot, { backgroundColor: color }]} />
                     <Text variant="bodyMedium" style={styles.label}>
@@ -67,7 +73,7 @@ export const StatusCard = ({ data, loading, error }: StatusCardProps) => {
                       {item.count}
                     </Text>
                   </View>
-                </View>
+                </RowComponent>
               );
             })}
           </View>
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   content: {
+    paddingTop: 0,
     paddingRight: 4,
   },
   rows: {

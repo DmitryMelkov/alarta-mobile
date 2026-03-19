@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { IconButton, Text, useTheme } from 'react-native-paper';
 
-import { DashboardId, useUiStore } from '@store/uiStore';
+import { DashboardId, useUiStore } from '@shared/store/uiStore';
 import { COLORS } from '@src/theme/colors';
 
 const SIDEBAR_WIDTH_RATIO = 0.75;
@@ -116,7 +116,7 @@ export function SidebarOverlay() {
           <View style={styles.header}>
             <View style={styles.logoWrap}>
               <Image
-                source={require('../../../assets/img/logoSmal.png')}
+                source={require('../../../../assets/img/logoSmal.png')}
                 style={styles.logoImage}
                 resizeMode="contain"
               />

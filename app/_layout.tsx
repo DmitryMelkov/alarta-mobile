@@ -5,8 +5,10 @@ import { useColorScheme } from 'react-native';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useUiStore } from '@store/uiStore';
-import { useAuthStore } from '@store/authStore';
+import '@shared/types/auth';
+
+import { useUiStore } from '@shared/store/uiStore';
+import { useAuthStore } from '@shared/store/authStore';
 
 export default function RootLayout() {
   const scheme = useColorScheme();
@@ -26,6 +28,16 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="settings" />
+          <Stack.Screen name="mechanic-assist-details/index" />
+          <Stack.Screen name="mechanic-assist-details/status" options={{ presentation: 'card' }} />
+          <Stack.Screen
+            name="mechanic-assist-details/malfunction"
+            options={{ presentation: 'card' }}
+          />
+          <Stack.Screen
+            name="mechanic-assist-details/maintenance"
+            options={{ presentation: 'card' }}
+          />
         </Stack>
       </PaperProvider>
     </SafeAreaProvider>

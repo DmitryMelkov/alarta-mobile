@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Card, Text, ProgressBar, useTheme } from 'react-native-paper';
 import { COLORS } from '@src/theme/colors';
+import { CardTitle } from '@shared/components/ui/CardTitle';
+import { LoadingState } from '@shared/components/ui/LoadingState';
 import type { MalfunctionsStats } from '../utils/malfunctionsStats';
 
 const ROWS: { key: keyof MalfunctionsStats; label: string; color: string }[] = [
@@ -15,9 +17,15 @@ interface MalfunctionsCardProps {
   data: MalfunctionsStats | null;
   loading?: boolean;
   error?: string | null;
+  onSeverityPress?: (key: keyof MalfunctionsStats) => void;
 }
 
-export const MalfunctionsCard = ({ data, loading, error }: MalfunctionsCardProps) => {
+export const MalfunctionsCard = ({
+  data,
+  loading,
+  error,
+  onSeverityPress,
+}: MalfunctionsCardProps) => {
   const theme = useTheme();
 
   if (error) {
@@ -34,23 +42,26 @@ export const MalfunctionsCard = ({ data, loading, error }: MalfunctionsCardProps
 
   return (
     <Card style={styles.card} mode="elevated">
-      <Card.Title title="Неисправности" titleVariant="titleMedium" />
+      <CardTitle title="Неисправности" iconName="warning" />
       <Card.Content style={styles.content}>
         {loading ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Загрузка…
-          </Text>
+          <LoadingState loading />
         ) : !data ? (
-          <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
-            Нет данных
-          </Text>
+          <LoadingState empty />
         ) : (
           <View style={styles.rows}>
             {ROWS.map(({ key, label, color }) => {
               const item = data[key];
               const pct = item.percentage / 100;
+              const RowComponent = onSeverityPress ? TouchableOpacity : View;
+
               return (
-                <View key={key} style={styles.row}>
+                <RowComponent
+                  key={key}
+                  style={styles.row}
+                  onPress={onSeverityPress ? () => onSeverityPress(key) : undefined}
+                  activeOpacity={0.7}
+                >
                   <View style={styles.labelContent}>
                     <View style={[styles.dot, { backgroundColor: color }]} />
                     <Text variant="bodyMedium" style={styles.label}>
@@ -65,7 +76,7 @@ export const MalfunctionsCard = ({ data, loading, error }: MalfunctionsCardProps
                       {item.count}
                     </Text>
                   </View>
-                </View>
+                </RowComponent>
               );
             })}
           </View>
@@ -82,6 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   content: {
+    paddingTop: 0,
     paddingRight: 4,
   },
   rows: {

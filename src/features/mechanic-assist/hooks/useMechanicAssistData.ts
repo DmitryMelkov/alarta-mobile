@@ -1,12 +1,33 @@
 import { useState, useEffect, useMemo } from 'react';
 import { fetchDTCCars, fetchDTCActive } from '../api/dtcApi';
-import { calculateMalfunctionsStats } from '@src/features/mechanic-assist/utils/malfunctionsStats';
-import { calculateStatusStats } from '@src/features/mechanic-assist/utils/statusStats';
-import { calculateMaintenanceStats } from '@src/features/mechanic-assist/utils/maintenanceStats';
-import { calculateTopProblems } from '@src/features/mechanic-assist/utils/topProblemsStats';
-import type { MalfunctionsStats } from '@src/features/mechanic-assist/utils/malfunctionsStats';
-import type { StatusStats } from '@src/features/mechanic-assist/utils/statusStats';
-import type { MaintenanceStats } from '@src/features/mechanic-assist/utils/maintenanceStats';
+import { calculateMalfunctionsStats } from '@features/mechanic-assist/utils/malfunctionsStats';
+import { calculateStatusStats } from '@features/mechanic-assist/utils/statusStats';
+import { calculateMaintenanceStats } from '@features/mechanic-assist/utils/maintenanceStats';
+import { calculateTopProblems } from '@features/mechanic-assist/utils/topProblemsStats';
+import {
+  buildMechanicVehicleRows,
+  MechanicVehicleRow,
+} from '@features/mechanic-assist/utils/vehicleTable';
+import {
+  buildMalfunctionDetailsBySeverity,
+  MalfunctionDetailsRow,
+  MalfunctionSeverityKey,
+} from '@features/mechanic-assist/utils/malfunctionDetails';
+import {
+  buildStatusDetailsByStatus,
+  StatusDetailsRow,
+  StatusKey,
+} from '@features/mechanic-assist/utils/statusDetails';
+import {
+  buildMaintenanceDetailsByCategory,
+  MaintenanceDetailsRow,
+} from '@features/mechanic-assist/utils/maintenanceDetails';
+import type { MalfunctionsStats } from '@features/mechanic-assist/utils/malfunctionsStats';
+import type { StatusStats } from '@features/mechanic-assist/utils/statusStats';
+import type {
+  MaintenanceStats,
+  MaintenanceKey,
+} from '@features/mechanic-assist/utils/maintenanceStats';
 
 export const useMechanicAssistData = () => {
   const [loading, setLoading] = useState(true);
@@ -71,6 +92,49 @@ export const useMechanicAssistData = () => {
       .map((v) => v.wln_name);
   }, [dtcActive]);
 
+  const vehicleRows: MechanicVehicleRow[] = useMemo(() => {
+    if (!dtcCars || !dtcActive) return [];
+    return buildMechanicVehicleRows(dtcCars, dtcActive);
+  }, [dtcCars, dtcActive]);
+
+  const malfunctionDetailsBySeverity: Record<MalfunctionSeverityKey, MalfunctionDetailsRow[]> =
+    useMemo(() => {
+      if (!dtcCars || !dtcActive) {
+        return {
+          critical: [],
+          important: [],
+          minor: [],
+          'no-data': [],
+        };
+      }
+      return buildMalfunctionDetailsBySeverity(dtcCars, dtcActive);
+    }, [dtcCars, dtcActive]);
+
+  const statusDetailsByStatus: Record<StatusKey, StatusDetailsRow[]> = useMemo(() => {
+    if (!dtcCars || !dtcActive) {
+      return {
+        active: [],
+        'in-work': [],
+        waiting: [],
+        completed: [],
+      };
+    }
+    return buildStatusDetailsByStatus(dtcCars, dtcActive);
+  }, [dtcCars, dtcActive]);
+
+  const maintenanceDetailsByCategory: Record<MaintenanceKey, MaintenanceDetailsRow[]> =
+    useMemo(() => {
+      if (!dtcCars) {
+        return {
+          overdue: [],
+          approaching: [],
+          planned: [],
+          'not-configured': [],
+        };
+      }
+      return buildMaintenanceDetailsByCategory(dtcCars);
+    }, [dtcCars]);
+
   return {
     loading,
     error,
@@ -81,5 +145,9 @@ export const useMechanicAssistData = () => {
     maintenance,
     topProblems,
     problematicCars,
+    vehicleRows,
+    malfunctionDetailsBySeverity,
+    statusDetailsByStatus,
+    maintenanceDetailsByCategory,
   };
 };

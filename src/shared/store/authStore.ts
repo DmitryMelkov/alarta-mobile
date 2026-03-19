@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-import type { JwtPayload } from '@src/types/auth';
-import { isTokenExpired } from '@src/utils/auth';
+import type { JwtPayload } from '@shared/types/auth';
+import { isTokenExpired } from '@shared/lib/auth';
 
 type User = {
   name: string;

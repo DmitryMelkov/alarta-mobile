@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
-import { DashboardLayout } from '@components/layout/DashboardLayout';
+import { DashboardLayout } from '@shared/components/layout/DashboardLayout';
 
 export default function SettingsScreen() {
   const theme = useTheme();

@@ -1,4 +1,4 @@
-import type { DTCVehicleWithActive } from '@src/types/dtc';
+import type { DTCVehicleWithActive } from '@shared/types/dtc';
 
 export interface TopProblemItem {
   name: string;

@@ -4,7 +4,7 @@
     "slug": "alarta-mobile",
     "version": "1.0.0",
     "scheme": "alarta-mobile",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/img/logo-whiteBackground-small.png",
     "userInterfaceStyle": "light",
     "splash": {

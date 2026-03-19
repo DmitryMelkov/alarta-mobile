@@ -1,4 +1,4 @@
-import type { DTCCar } from '@src/types/dtc';
+import type { DTCCar } from '@shared/types/dtc';
 
 const OVERDUE_MONTHS = 6;
 const APPROACHING_MONTHS = 3;

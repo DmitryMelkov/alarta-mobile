@@ -17,4 +17,8 @@ export const COLORS = {
   progressImportant: '#ffc107',
   progressMinor: '#308e21',
   progressNoData: '#6c757d',
+
+  // Базовые цвета
+  white: '#ffffff',
+  black: '#000000',
 };

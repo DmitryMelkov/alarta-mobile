@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 
-import { useAuthStore } from '@store/authStore';
-import { AuthErrors, validateAuthForm } from '@src/utils/authValidation';
+import { useAuthStore } from '@shared/store/authStore';
+import { AuthErrors, validateAuthForm } from '@shared/lib/authValidation';
 import { COLORS } from '@src/theme/colors';
 
 export function LoginScreen() {

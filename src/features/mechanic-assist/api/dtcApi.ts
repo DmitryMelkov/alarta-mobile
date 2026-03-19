@@ -1,5 +1,5 @@
-import { apiClient } from '@api/client';
-import type { DTCCar, DTCVehicleWithActive } from '@src/types/dtc';
+import { apiClient } from '@shared/api/client';
+import type { DTCCar, DTCVehicleWithActive } from '@shared/types/dtc';
 
 export interface DTCFilterParams {
   veh_id?: number;

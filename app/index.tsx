@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { DashboardLayout } from '@components/layout/DashboardLayout';
-import { useUiStore } from '@store/uiStore';
-import { useAuthStore } from '@store/authStore';
-import { LoginScreen } from '@src/screens/LoginScreen';
-import { MechanicAssistScreen } from '@src/features/mechanic-assist/screens/MechanicAssistScreen';
-import { AnalyticsScreen } from '@src/features/analytics/screens/AnalyticsScreen';
+import { DashboardLayout } from '@shared/components/layout/DashboardLayout';
+import { useUiStore } from '@shared/store/uiStore';
+import { useAuthStore } from '@shared/store/authStore';
+import { LoginScreen } from '@features/auth/screens/LoginScreen';
+import { MechanicAssistScreen } from '@features/mechanic-assist/screens/MechanicAssistScreen';
+import { AnalyticsScreen } from '@features/analytics/screens/AnalyticsScreen';
 
 export default function HomeScreen() {
   const selectedDashboard = useUiStore((state) => state.selectedDashboard);

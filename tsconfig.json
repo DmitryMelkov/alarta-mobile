@@ -5,10 +5,9 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["app/*"],
-      "@src/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@store/*": ["src/store/*"],
-      "@api/*": ["src/api/*"]
+      "@shared/*": ["src/shared/*"],
+      "@features/*": ["src/features/*"],
+      "@src/*": ["src/*"]
     }
   }
 }
